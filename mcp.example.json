@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "bupt-agent": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "C:/path/to/bupt_anything",
+        "run",
+        "--frozen",
+        "bupt-agent-mcp"
+      ]
+    }
+  }
+}
