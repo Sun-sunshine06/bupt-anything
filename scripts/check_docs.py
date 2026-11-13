@@ -34,6 +34,10 @@ def check_site():
         assert schema["url"] == SITE_URL + route
         assert schema["@type"] == ("SoftwareSourceCode" if not route else "TechArticle")
         assert soup.select_one("article h1"), f"Missing heading: {file}"
+        if not route:
+            for provider in ("google-site-verification", "msvalidate.01"):
+                proof = soup.find("meta", attrs={"name": provider})
+                assert proof and proof.get("content"), f"Missing ownership proof: {provider}"
 
     prefix = urlsplit(SITE_URL).path
     for file, soup in documents.items():

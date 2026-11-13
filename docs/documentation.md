@@ -40,4 +40,6 @@ GitHub 仓库 Settings → Pages 的 Source 使用 GitHub Actions。修改文档
 
 站点上线不等于已被索引。维护者可在完成站点所有权验证后，将 `https://sun-sunshine06.github.io/bupt-anything/sitemap.xml` 提交给搜索引擎站长工具，并观察真实的搜索与引用表现。本项目不会自动创建分析账号或添加访客跟踪。
 
+首页模板 `site_overrides/main.html` 包含 Google Search Console 和 Bing Webmaster Tools 的公开所有权验证标记。这些标记不是登录密码，但验证完成后仍需保留；修改主题时应保留它们，或先在对应站长工具中配置替代验证方式。站点地图提交与索引状态应以站长工具的实际报告为准。
+
 参考：[Google AI 搜索说明](https://developers.google.com/search/docs/appearance/ai-features)、[GitHub Pages 工作流](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)。
