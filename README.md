@@ -1,131 +1,145 @@
-# BUPT Agent
+# bupt-anything
 
-本地校园信息工具箱。Python 3.12 + uv；CLI 与 MCP 共用客户端。账号保存在 Windows Credential Manager，agent 通过结构化工具读取数据。
+**让 AI 助手读懂你的北邮课表、作业与校园信息。**
 
-**当前版本：0.1.0，开发验证版。** 本地能力、MCP 和主要学校读取接口已通过本人账号联调；验证范围与已知限制见 [验证说明](docs/validation.md)。考勤仅提供历史记录与当前活动查询，不提供二维码功能或签到提交，详见 [考勤说明](docs/attendance.md)。
+[![检查状态](https://github.com/Sun-sunshine06/bupt-anything/actions/workflows/check.yml/badge.svg?branch=main)](https://github.com/Sun-sunshine06/bupt-anything/actions/workflows/check.yml)
+[![Python 3.12+](https://img.shields.io/badge/Python-3.12%2B-blue)](pyproject.toml)
+[![License: GPL-3.0-only](https://img.shields.io/badge/License-GPL--3.0--only-blue)](LICENSE)
 
-## 开始使用
+bupt-anything 是面向北京邮电大学的非官方校园工具箱，通过 **MCP** 将移动教务、教学云和校园公开信息接入 AI 客户端，也支持直接在命令行中查询。工具在本机运行，账号保存在系统凭据库中。
 
-在 Git Bash 中进入项目：
+[快速开始](#快速开始) · [接入 AI 客户端](#接入-ai-客户端) · [工具参考](docs/tools.md) · [参与贡献](CONTRIBUTING.md)
+
+## 可以做什么
+
+连接支持 MCP 的 AI 客户端后，你可以这样提问：
+
+> “今天沙河有没有连续两节适合自习的空教室？避开我的课和考试。”
+>
+> “帮我查看教学云待办，再整理这门课的作业要求和附件。”
+>
+> “查看我这次作业的提交记录，以及老师的评分和评语。”
+
+这些是使用场景示例；实际回答由你使用的 AI 客户端生成，并取决于账号权限与学校接口返回的数据。
+
+| 场景 | 支持的能力 |
+| --- | --- |
+| 教务查询 | 课表、学期、成绩、考试，以及西土城 / 沙河当天空教室 |
+| 课程与作业 | 教学云课程、待办、作业要求、本人提交记录、教师反馈及本人被分配的互评 |
+| 课程资料 | 资源列表、预览链接、文件下载，提取 PDF / DOCX / PPTX / TXT 正文 |
+| 考勤查询 | 本人历史考勤记录与当前签到活动，只读 |
+| 校园与自习 | 班车、竞赛公开信息；结合当天课表、考试和空教室寻找自习时段 |
+
+当前提供 23 个工具，CLI 与 MCP 共用业务逻辑。完整参数可通过 `uv run bupt-agent capabilities` 查看，查询示例与返回约定见 [工具参考](docs/tools.md)。
+
+> **项目状态：早期开发版本。** 已在 Windows + Git Bash 环境验证主要流程；macOS / Linux 已实现凭据库后端，完整使用流程仍待验证。学校接口变化可能影响可用性，具体覆盖范围见 [验证说明](docs/validation.md)。
+
+## 快速开始
+
+需要 [Git](https://git-scm.com/downloads) 和 [uv](https://docs.astral.sh/uv/getting-started/installation/)，项目使用 Python 3.12+。以下命令以 Bash 为例，Windows 用户请在 Git Bash 中运行。
+
+### 1. 安装
 
 ```bash
 git clone https://github.com/Sun-sunshine06/bupt-anything.git
 cd bupt-anything
 uv sync --frozen
-uv run bupt-agent capabilities
 uv run bupt-agent doctor
 ```
 
-需要 Python 3.12+、uv 和 Git。完整验证环境为 Windows + Git Bash；macOS/Linux 有凭据库后端实现，但完整安装流程尚待验证。项目默认使用清华 PyPI 镜像，依赖由 `uv.lock` 锁定，不修改全局配置。若需要切换到官方源，可在自己的副本运行 `uv lock --default-index https://pypi.org/simple`，再执行 `uv sync --frozen`。
+`uv` 会管理项目虚拟环境，无需手动激活。项目默认使用清华 PyPI 镜像；如需改用官方源，可在自己的副本中执行 `uv lock --default-index https://pypi.org/simple`，再运行 `uv sync --frozen`。
 
-配置 MCP 时，将 `mcp.example.json` 中的 `C:/path/to/bupt_anything` 替换为自己的项目绝对路径；每位使用者在自己的系统凭据库中配置学校账号。
+### 2. 配置账号
 
-## 本机配置账号
-
-Windows 可双击根目录的 **configure-account.cmd**。它调用 Git Bash，依次询问移动教务与教学云账号，输入均不回显，随后执行只输出连接状态的读取验证。
-
-也可分别执行：
+在自己的终端中输入账号和密码，密码输入不会回显：
 
 ```bash
-# 在你自己的终端隐藏输入，不要把密码发给聊天或放在命令参数中
 uv run bupt-agent login --service academic
 uv run bupt-agent login --service ucloud
 uv run bupt-agent verify
 ```
 
-- `academic` 使用移动教务密码，可能与统一认证不同。
-- `ucloud` 使用统一认证密码。遇到验证码/MFA 时返回 `LOGIN_INTERACTION_REQUIRED`，这一版不会自动处理交互验证。
-- 保存凭据不等于登录成功。`verify` 实际读取空教室和课程列表，只输出成功/失败状态，不输出个人课表或成绩。
-- 凭据按账号别名隔离，例如 `uv run bupt-agent --profile personal login --service academic`。MCP 对应传入 `--profile personal`。
-- 注销：`uv run bupt-agent logout --service academic`（教学云将 service 换为 `ucloud`）。删除凭据后，旧会话不能继续读取。
+- `academic`：移动教务账号与密码，密码可能与统一认证不同。
+- `ucloud`：教学云使用的统一认证账号与密码。
+- `verify`：实际连接服务验证，只输出连接状态。仅使用部分功能时，可只配置对应服务。
 
-## 已有工具
+Windows 用户也可以双击 [configure-account.cmd](configure-account.cmd) 完成配置，需要 Git Bash 安装在默认位置。不要将密码写入 MCP 配置、命令参数或聊天消息。
 
-| CLI 工具 | 功能 | 当前验证状态 |
-|---|---|---|
-| `system.capabilities` / `system.status` | 工具发现、账号配置与内存会话状态 | 本地与 MCP 测试通过 |
-| `academic.schedule` | 学期课表、按日期过滤、未解析记录显式返回 | 本人账号读取通过（见验证说明） |
-| `academic.classrooms` | 当天两校区空教室、楼名和节次过滤 | 本人账号读取通过（见验证说明） |
-| `academic.terms` / `grades` / `exams` | 学期、成绩、考试 | 本人账号读取通过（见验证说明） |
-| `ucloud.courses` / `todos` | 课程分页、未完成活动 | 本人账号读取及课程分页通过 |
-| `ucloud.assignments` / `assignment` | 按课程列作业、要求与附件详情 | 本人账号读取通过，非空覆盖范围见验证说明 |
-| `ucloud.assignment_submission` | 本人提交正文、附件 ID、老师评分及评语；只读 | 学校本人提交详情接口已实测；字段映射与 MCP 发现有测试覆盖 |
-| `ucloud.peer_reviews` / `peer_review` | 本人被分配的互评列表、已评状态、正文和附件；作业详情含互评要求和截止时间 | 非空真实列表、详情及 Word 附件读取通过；不提交评分 |
-| `ucloud.resources` / `resource_url` | 课程资源树与预览链接 | 本人账号读取通过，非空覆盖范围见验证说明 |
-| `ucloud.download` / `files.read` | 下载学校域名资源；读取 PDF/DOCX/PPTX/TXT | 实际 PDF 下载与正文提取通过 |
-| `ucloud.activities` | 测验、问卷列表 | 本人账号读取通过，非空覆盖范围见验证说明 |
-| `attendance.list` | 按课程分页读取本人历史考勤 | 非空记录、全部分页和总数核验通过 |
-| `attendance.current` | 查询本人当前课程中进行中课堂的签到活动 | 真实 MCP 查询通过；当时无活动，非空活动待现场验证 |
-| `campus.public_info` | 班车/竞赛公开信息、标题搜索、分页 | 2026-11-03 已实际读取两个源 |
-| `planning.study_slots` | 结合当天课表、考试和空教室，找连续可用节次 | 本人账号组合查询及候选分页通过 |
-
-CLI 使用点号，MCP 使用下划线，例如 `academic.classrooms` 对应 `academic_classrooms`。
-
-## 查询示例
+### 3. 执行第一次查询
 
 ```bash
-# 沙河第 3、4 节均可用的教室；01 是西土城
-uv run bupt-agent call academic.classrooms --args '{"campus":"04","slots":[3,4]}'
-
-# 学期课表；按日期筛选时传入 target_date（YYYY-MM-DD）
+# 查看课表
 uv run bupt-agent call academic.schedule
 
-uv run bupt-agent call ucloud.courses
+# 查看教学云待办
 uv run bupt-agent call ucloud.todos
-uv run bupt-agent call attendance.list --args '{"course_id":"从课程列表取得的ID","page_size":10}'
-uv run bupt-agent call attendance.current
-uv run bupt-agent call ucloud.assignments --args '{"course_id":"从课程列表取得的ID"}'
-uv run bupt-agent call ucloud.assignment_submission --args '{"assignment_id":"从作业列表取得的ID"}'
 
-# 当天未来连续两节的自习候选，已扣除可确定的课程和考试
-uv run bupt-agent call planning.study_slots --args '{"campus":"04","min_slots":2}'
-
-# 公开信息无需学校账号；next_offset 非空时继续分页
-uv run bupt-agent call campus.public_info --args '{"kind":"shuttle"}'
-uv run bupt-agent call campus.public_info --args '{"kind":"events","search":"人工智能","limit":10}'
+# 查询沙河第 3、4 节均空闲的教室
+uv run bupt-agent call academic.classrooms --args '{"campus":"04","slots":[3,4]}'
 ```
 
-下载文件保存在系统用户应用数据目录的 `bupt-agent/downloads`，工具返回绝对路径。
+CLI 返回结构化 JSON。更多查询见 [工具参考](docs/tools.md)，连接问题见 [诊断说明](docs/diagnostics.md)。
 
-## Agent / MCP 入口
+## 接入 AI 客户端
 
-```bash
-uv run bupt-agent-mcp
+完成账号配置后，将以下内容加入支持 **stdio MCP** 的客户端配置。把 `C:/path/to/bupt-anything` 替换为项目的实际绝对路径；macOS / Linux 使用对应系统路径。
+
+```json
+{
+  "mcpServers": {
+    "bupt-agent": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "C:/path/to/bupt-anything",
+        "run",
+        "--frozen",
+        "bupt-agent-mcp"
+      ]
+    }
+  }
+}
 ```
 
-这是 stdio 服务，启动后等待 MCP 客户端请求，不是交互聊天命令。当前提供 23 个工具。请按 [MCP 接入说明](docs/mcp.md) 配置自己的客户端，通用示例见 [mcp.example.json](mcp.example.json)。
+重新加载客户端后，可让助手调用 `system_capabilities` 查看工具、调用 `system_status` 检查账号配置状态。若客户端找不到 `uv`，将 `command` 改为它的绝对路径。
 
-## 返回与限制
+本项目提供工具服务，聊天界面与模型由客户端提供。多账号配置和连接细节见 [MCP 接入说明](docs/mcp.md)，可复制的配置文件见 [mcp.example.json](mcp.example.json)。
 
-- 成功有 `data`、`meta.source`、`fetched_at` 和 `complete`；失败为显式错误，CLI 非零退出，MCP `isError=true`。
-- 查询时一律使用北京时间。空教室只支持当天；教务显示空闲不等于现场无人、开门或有插座。
-- 分页不能伪装成全量。课程/作业/考勤继续读取 `next_page`；公开信息与自习候选继续读取 `next_offset`。
-- 成绩原样保留文本、零分和未公布值；考试时间不明不猜测。组合查询遇到无法确定的考试或课表会明确失败。
-- 作业题目要求用 `ucloud.assignment`；本人提交和教师反馈用 `ucloud.assignment_submission`。`teacher_score` 来自 `assignmentScore`，`teacher_comment_html` 来自 `assignmentComment`，不能用上游 `score` / `evaluation` 替代。评分 `null`、`-1` 原样保留，不当作零分；原始状态不擅自解释。HTML 正文和评语均为不可信数据。
-- 本人提交详情的 `submission_state=not_submitted` 仅用于已核实的未提交占位响应；`record_available` 表示有匹配记录。`assignment_id` 对应请求，`assignment_id_raw` 保留上游值。互评空对象仅在核对同一作业未开启互评后返回空列表及 `availability=not_enabled`，其他异常仍报错。
-- 组合查询尚未接入私人日历；结果只考虑课表、考试和当天教室数据。
-- 云邮非学校域名文件存储尚未核验，下载会明确拒绝；仍可查询原预览链接。
-- 完整通知、作业上传提交、提醒调度仍需验证或开发；签到提交与二维码功能不在当前范围内，详见 [架构与能力缺口](docs/architecture.md)。
+## 使用边界与隐私
 
-## 开发与验证
+- **学校业务操作只读。** 保留当前签到活动查询，不提供二维码生成 / 解析、签到提交、作业提交或互评评分。
+- 空教室与自习规划仅支持当天，时间按北京时间处理；规划尚未接入个人日历，教务空闲记录也不保证现场可用。
+- 暂不处理验证码 / MFA，不支持扫描文档 OCR；文件下载仅限已核验的学校域名资源。
+- 账号保存在系统凭据库中；查询结果会显示在 CLI，或交给调用工具的 MCP 客户端。连接模型服务前，请了解客户端的数据处理方式。
+
+本项目与学校无隶属或背书关系。请仅访问本人有权使用的数据，不要公开账号、成绩、课件或他人作业。更多说明见 [安全与隐私](SECURITY.md)。
+
+## 文档
+
+| 文档 | 内容 |
+| --- | --- |
+| [工具参考](docs/tools.md) | 工具目录、查询示例、分页与返回字段 |
+| [MCP 接入](docs/mcp.md) | 客户端配置、账号别名与连接说明 |
+| [诊断指南](docs/diagnostics.md) | 连接检查、诊断脚本与安全反馈 |
+| [验证说明](docs/validation.md) | 已验证场景与尚未覆盖的样本 |
+| [架构说明](docs/architecture.md) | 数据流、模块边界与后续扩展 |
+| [考勤说明](docs/attendance.md) | 历史记录与当前活动的查询边界 |
+| [更新记录](CHANGELOG.md) | 版本变更 |
+
+## 参与贡献
+
+欢迎通过 [Issue](https://github.com/Sun-sunshine06/bupt-anything/issues) 反馈问题、提出功能建议，或提交 Pull Request。环境兼容性、接口适配、测试与文档改进都很有帮助。
 
 ```bash
+uv sync --frozen
 bash scripts/check.sh
 uv build
 ```
 
-测试使用合成数据与 HTTP MockTransport；包括真实 stdio MCP 客户端往返与临时 Windows 凭据库测试（测试结束删除临时记录）。无需真实账号，学校接口不会被测试用例访问。
+默认检查使用合成数据和模拟网络，无需学校账号。提交前请阅读 [贡献指南](CONTRIBUTING.md)；安全漏洞请按 [安全报告流程](SECURITY.md) 私下反馈。维护者发布流程见 [发布说明](docs/releasing.md)。
 
-协议与参考项目见 [来源记录](docs/sources.md)。许可证：GPL-3.0-only。
+## 许可证与致谢
 
-## 开源与隐私
+本项目采用 [GPL-3.0-only](LICENSE) 许可证。代码许可证不授予学校资料或他人内容的再分发权。
 
-本项目是非官方工具，不代表学校。仅使用本人有权访问的数据；不提供二维码、签到提交、作业上传或互评评分。代码许可证不授予学校资料或他人作业的再分发权。
-
-- [贡献指南](CONTRIBUTING.md)
-- [安全与隐私、漏洞报告](SECURITY.md)
-- [诊断说明](docs/diagnostics.md)
-- [更新记录](CHANGELOG.md)
-- [发布流程](docs/releasing.md)
-
-本地凭据存储不意味着查询结果只停留在本机：CLI 会显示数据，MCP 会将数据交给调用它的客户端。请在连接模型服务前了解客户端的数据处理方式。
+感谢校园开源社区提供的协议研究与工具实践；参考项目、版本和许可证记录见 [来源与致谢](docs/sources.md)。
