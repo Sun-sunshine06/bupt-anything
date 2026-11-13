@@ -1,4 +1,4 @@
-# bupt-anything
+# bupt-anything：北邮校园 MCP Server 与命令行工具
 
 **让 AI 助手读懂你的北邮课表、作业与校园信息。**
 
@@ -6,9 +6,11 @@
 [![Python 3.12+](https://img.shields.io/badge/Python-3.12%2B-blue)](pyproject.toml)
 [![License: GPL-3.0-only](https://img.shields.io/badge/License-GPL--3.0--only-blue)](LICENSE)
 
-bupt-anything 是面向北京邮电大学的非官方校园工具箱，通过 **MCP** 将移动教务、教学云和校园公开信息接入 AI 客户端，也支持直接在命令行中查询。工具在本机运行，账号保存在系统凭据库中。
+bupt-anything 是面向北京邮电大学（北邮，BUPT）的非官方开源校园工具箱，提供 **MCP Server（Model Context Protocol 服务端）和 CLI 命令行工具**，用于查询课表、成绩、考试、空教室，以及教学云（UCloud）的课程、作业和资料。工具在本机运行，账号保存在系统凭据库中。
 
-[快速开始](#快速开始) · [接入 AI 客户端](#接入-ai-客户端) · [工具参考](docs/tools.md) · [参与贡献](CONTRIBUTING.md)
+代码包与命令使用名称 **BUPT Agent / `bupt-agent`**，均属于本项目。English overview: [BUPT campus MCP server and CLI](docs/overview.en.md).
+
+[快速开始](#快速开始) · [接入 AI 客户端](#接入-ai-客户端) · [工具参考](docs/tools.md) · [常见问题](docs/faq.md) · [参与贡献](CONTRIBUTING.md)
 
 ## 可以做什么
 
@@ -118,6 +120,8 @@ CLI 返回结构化 JSON。更多查询见 [工具参考](docs/tools.md)，连�
 
 | 文档 | 内容 |
 | --- | --- |
+| [常见问题](docs/faq.md) | 适用人群、账号要求、客户端兼容性与功能边界 |
+| [English overview](docs/overview.en.md) | Project identity, supported features and setup |
 | [工具参考](docs/tools.md) | 工具目录、查询示例、分页与返回字段 |
 | [MCP 接入](docs/mcp.md) | 客户端配置、账号别名与连接说明 |
 | [诊断指南](docs/diagnostics.md) | 连接检查、诊断脚本与安全反馈 |
