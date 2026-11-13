@@ -39,6 +39,7 @@ theme:
 plugins:
   - search:
       lang: [zh, en]
+      jieba_dict_user: docs/search-dictionary.txt
 markdown_extensions:
   - admonition
   - attr_list

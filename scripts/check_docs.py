@@ -62,6 +62,7 @@ def check_site():
     assert locations == set(urls.values()), "Sitemap differs from published pages"
     search = json.loads((SITE / "search/search_index.json").read_text(encoding="utf-8"))
     assert search["docs"] and any("课表" in item["text"] for item in search["docs"])
+    assert any("\u200b" in item["text"] for item in search["docs"]), "Chinese segmentation missing"
     indexed_pages = {item["location"].split("#")[0] for item in search["docs"]}
     assert "faq/" in indexed_pages and "overview.en/" in indexed_pages
     assert (SITE / "llms.txt").is_file()
