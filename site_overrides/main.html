@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block extrahead %}
+  {{ super() }}
+  {% if page %}
+  <meta property="og:type" content="{{ 'website' if page.is_homepage else 'article' }}">
+  <meta property="og:title" content="{{ page.title | e }} · bupt-anything">
+  <meta property="og:description" content="{{ page.meta.description | default(config.site_description) | e }}">
+  <meta property="og:url" content="{{ page.canonical_url | e }}">
+  <meta property="og:site_name" content="bupt-anything 文档">
+  <meta property="og:locale" content="{{ 'en_US' if page.meta.lang == 'en' else 'zh_CN' }}">
+  <meta name="twitter:card" content="summary">
+  {% if page.is_homepage %}
+  <link rel="alternate" hreflang="en" href="{{ config.site_url }}overview.en/">
+  <link rel="alternate" hreflang="zh-CN" href="{{ config.site_url }}">
+  <script type="application/ld+json">{{ {
+    '@context': 'https://schema.org', '@type': 'SoftwareSourceCode',
+    'name': 'bupt-anything', 'alternateName': 'BUPT Agent',
+    'description': config.site_description, 'url': config.site_url,
+    'codeRepository': config.repo_url, 'programmingLanguage': 'Python',
+    'runtimePlatform': 'Python 3.12+', 'license': config.repo_url ~ '/blob/main/LICENSE',
+    'inLanguage': ['zh-CN', 'en']
+  } | tojson }}</script>
+  {% else %}
+  {% if page.meta.lang == 'en' %}
+  <link rel="alternate" hreflang="en" href="{{ page.canonical_url | e }}">
+  <link rel="alternate" hreflang="zh-CN" href="{{ config.site_url }}">
+  {% endif %}
+  <script type="application/ld+json">{{ {
+    '@context': 'https://schema.org', '@type': 'TechArticle',
+    'headline': page.title, 'description': page.meta.description,
+    'url': page.canonical_url, 'inLanguage': page.meta.lang | default('zh-CN'),
+    'isPartOf': {'@type': 'WebSite', 'name': config.site_name, 'url': config.site_url}
+  } | tojson }}</script>
+  {% endif %}
+  {% else %}<meta name="robots" content="noindex">{% endif %}
+{% endblock %}

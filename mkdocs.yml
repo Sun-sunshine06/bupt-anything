@@ -1,0 +1,77 @@
+site_name: bupt-anything 文档
+site_url: https://sun-sunshine06.github.io/bupt-anything/
+site_description: 北邮 BUPT 校园 MCP Server 与 CLI 文档：安装、AI 客户端接入、课表与空教室查询、教学云作业和资料。
+repo_url: https://github.com/Sun-sunshine06/bupt-anything
+repo_name: Sun-sunshine06/bupt-anything
+edit_uri: ''
+docs_dir: docs
+site_dir: site
+use_directory_urls: true
+theme:
+  name: material
+  language: zh
+  custom_dir: site_overrides
+  font: false
+  logo: assets/logo.svg
+  favicon: assets/logo.svg
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.indexes
+    - navigation.top
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+  palette:
+    - scheme: default
+      primary: custom
+      accent: teal
+      toggle:
+        icon: material/weather-night
+        name: 切换深色模式
+    - scheme: slate
+      primary: custom
+      accent: teal
+      toggle:
+        icon: material/weather-sunny
+        name: 切换浅色模式
+plugins:
+  - search:
+      lang: [zh, en]
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - toc:
+      permalink: true
+      slugify: !!python/name:markdown.extensions.toc.slugify_unicode
+extra_css:
+  - assets/site.css
+extra:
+  generator: false
+nav:
+  - 首页: index.md
+  - 开始使用:
+      - 安装与首次查询: getting-started.md
+      - MCP 客户端接入: mcp.md
+      - 常见问题: faq.md
+      - 连接与诊断: diagnostics.md
+  - 工具参考:
+      - 工具目录与示例: tools.md
+      - 考勤查询边界: attendance.md
+      - 验证范围: validation.md
+      - 架构与接口状态: architecture.md
+  - 维护与贡献:
+      - 贡献指南: contributing.md
+      - 安全与隐私: security.md
+      - 更新记录: changelog.md
+      - 来源与致谢: sources.md
+      - 发布流程: releasing.md
+      - 文档站维护: documentation.md
+      - 许可证: license.md
+  - English: overview.en.md

@@ -32,11 +32,16 @@ only-include = [
   "README.md", "LICENSE", "CONTRIBUTING.md", "SECURITY.md", "CHANGELOG.md",
   "pyproject.toml", "uv.lock", ".python-version", ".gitignore", ".gitattributes",
   "configure-account.cmd", "mcp.example.json",
+  "mkdocs.yml", "site_overrides",
 ]
 exclude = ["**/__pycache__/**", "**/*.pyc", "**/*.har", "**/*.log"]
 
 [dependency-groups]
 dev = ["pytest>=8,<10", "pytest-asyncio>=1,<2", "ruff>=0.14,<1"]
+docs = [
+    "mkdocs==1.6.1",
+    "mkdocs-material==9.7.6",
+]
 
 [[tool.uv.index]]
 name = "tsinghua"

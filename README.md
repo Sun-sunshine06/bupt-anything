@@ -10,7 +10,7 @@ bupt-anything 是面向北京邮电大学（北邮，BUPT）的非官方开源�
 
 代码包与命令使用名称 **BUPT Agent / `bupt-agent`**，均属于本项目。English overview: [BUPT campus MCP server and CLI](docs/overview.en.md).
 
-[快速开始](#快速开始) · [接入 AI 客户端](#接入-ai-客户端) · [工具参考](docs/tools.md) · [常见问题](docs/faq.md) · [参与贡献](CONTRIBUTING.md)
+[文档站](https://sun-sunshine06.github.io/bupt-anything/) · [快速开始](#快速开始) · [接入 AI 客户端](#接入-ai-客户端) · [工具参考](docs/tools.md) · [常见问题](docs/faq.md) · [参与贡献](CONTRIBUTING.md)
 
 ## 可以做什么
 
@@ -117,6 +117,8 @@ CLI 返回结构化 JSON。更多查询见 [工具参考](docs/tools.md)，连�
 本项目与学校无隶属或背书关系。请仅访问本人有权使用的数据，不要公开账号、成绩、课件或他人作业。更多说明见 [安全与隐私](SECURITY.md)。
 
 ## 文档
+
+访问 [独立文档站](https://sun-sunshine06.github.io/bupt-anything/)，使用站内搜索、章节导航和深浅色主题。以下文档也可直接在仓库中阅读。
 
 | 文档 | 内容 |
 | --- | --- |
