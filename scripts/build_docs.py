@@ -20,7 +20,7 @@ PAGES = {
     "getting-started.md": ("README.md", "安装与首次查询", "从克隆项目、uv 安装、配置移动教务和教学云账号，到执行第一次查询和连接 MCP 客户端。"),
     "mcp.md": ("docs/mcp.md", "MCP 客户端接入", "配置本地 stdio MCP 服务、设置项目路径和账号别名，并检查 bupt-anything 工具连接状态。"),
     "faq.md": ("docs/faq.md", "常见问题：北邮 MCP 与教学云查询", "了解 bupt-anything 的适用人群、学校账号要求、MCP 兼容性、系统支持和只读功能边界。"),
-    "tools.md": ("docs/tools.md", "工具目录与查询示例", "查阅 23 个校园工具的用途、CLI 示例、分页方式、作业提交状态与结构化返回约定。"),
+    "tools.md": ("docs/tools.md", "工具目录与查询示例", "查阅 25 个校园工具的用途、消息通知与未开始作业发现、CLI 示例、分页及结构化返回约定。"),
     "attendance.md": ("docs/attendance.md", "考勤查询边界", "了解本人历史考勤与当前签到活动的只读查询范围，以及不提供的二维码和签到提交功能。"),
     "diagnostics.md": ("docs/diagnostics.md", "连接检查与诊断", "区分离线检查和真实账号联调，使用只输出状态与数量的诊断脚本安全排查连接问题。"),
     "validation.md": ("docs/validation.md", "验证范围与已知限制", "查看 bupt-anything 已验证的真实场景、合成测试覆盖和尚未充分验证的平台与接口样本。"),

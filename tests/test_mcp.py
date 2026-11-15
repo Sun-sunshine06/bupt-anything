@@ -16,6 +16,8 @@ async def test_real_stdio_tool_discovery_and_call():
             assert {
                 "academic_classrooms",
                 "ucloud_courses",
+                "ucloud_notifications",
+                "ucloud_upcoming_assignments",
                 "ucloud_assignment_submission",
                 "attendance_current",
             } <= names
@@ -30,10 +32,10 @@ async def test_real_stdio_tool_discovery_and_call():
                 "qr_build",
             }
             assert removed.isdisjoint(names)
-            assert len(names) == 23
+            assert len(names) == 25
             result = await session.call_tool("system_capabilities", {})
             assert not result.isError
-            assert len(result.structuredContent["data"]) == 23
+            assert len(result.structuredContent["data"]) == 25
             for name in removed:
                 result = await session.call_tool(name, {})
                 assert result.isError

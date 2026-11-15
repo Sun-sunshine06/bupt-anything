@@ -19,7 +19,7 @@ async def main():
             await session.initialize()
             tools = (await session.list_tools()).tools
             report["tool_count"] = len(tools)
-            assert len(tools) == 23
+            assert len(tools) == 25
 
             async def call(name, args=None):
                 response = await session.call_tool(name, args or {})

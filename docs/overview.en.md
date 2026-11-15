@@ -14,7 +14,9 @@ Source repository: [Sun-sunshine06/bupt-anything](https://github.com/Sun-sunshin
 - Attendance: read-only attendance history and current attendance activities.
 - Campus information: public shuttle and competition information; today's study-slot suggestions based on class schedules, exams and classroom availability.
 
-There are 23 tools. Run `uv run bupt-agent capabilities` for tool definitions. See the [tool reference](tools.md) and [validation scope](validation.md) for details and coverage limits.
+The notification reader can automatically discover assignments visible in your own notifications before their start time, including requirements, dates and attachment metadata. Use `ucloud.upcoming_assignments` (MCP: `ucloud_upcoming_assignments`); download and file-reading tools can then extract attachment text. This covers accessible notifications, not every unpublished teacher draft. Pagination and failed or unresolved details are reported explicitly.
+
+There are 25 tools. Run `uv run bupt-agent capabilities` for tool definitions. See the [tool reference](tools.md) and [validation scope](validation.md) for details and coverage limits.
 
 ## Getting started
 
